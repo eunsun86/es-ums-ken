@@ -1,0 +1,127 @@
+/*
+ *
+ * 이곳에 CSS 작업을 해주세요!
+ * 아래의 CSS 코드는 지우셔도 됩니다!
+ *
+ * less라는 CSS preprocessor를 사용하셔도 되고, 그냥 파일명은 유지한채 CSS로 작업하셔도 됩니다.
+ * http://lesscss.org
+ *
+*/
+
+html, body {
+  background-color: pink;
+  padding: 20px;
+}
+
+em {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+h1,h2,h3 {
+  padding: 0;
+  margin: 10px;
+}
+
+h1 {
+  font-size: 48px;
+  margin-bottom: 50px;
+}
+
+h2 {
+  font-size: 36px;
+  margin-top: 50px;
+}
+
+h3 {
+  font-size: 26px;
+}
+
+ul {
+  padding: 0;
+}
+
+.horizontal-list {
+  width: 100%;
+
+  & > li {
+    display: inline-block;
+    width: 100px;
+    height: 20px;
+    border: 1px solid grey;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px;
+
+    &.selection {
+      background-color: yellow;
+
+      &.selected {
+        background-color: blue;
+        color: white;
+      }
+    }
+
+    &.list-item {
+      background-color: white;
+
+      &.selected {
+        background-color: blue;
+        color: white;
+      }
+    }
+  }
+}
+
+.user-form {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 500px;
+  padding: 10px;
+  display: none;
+  background-color: white;
+
+  button {
+    border-radius: 5px;
+    width: 100px;
+    height: 30px;
+    margin-top: 20px;
+    cursor: pointer;
+    color: white;
+
+    &.submit {
+      background-color: green;
+    }
+
+    &.cancel {
+      background-color: grey;
+    }
+
+    &.close {
+      display: none;
+      background-color: red;
+    }
+  }
+}
+
+.success-message {
+  color: blue;
+  margin-top: 10px;
+  display: none;
+}
+
+.user-info-field {
+  label {
+    font-size: 16px;
+  }
+
+  input {
+    height: 30px;
+    width: 150px;
+    margin: 10px;
+
+    &:disabled {
+      background-color: lightgrey;
+    }
+  }
+}
