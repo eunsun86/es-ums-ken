@@ -8,7 +8,7 @@
     3: '웹디자이너',
     4: '사장님'
   };
-  var userCollection = {};
+  var userCollection = [];
   var userId = 0;
   var targetUser = null;
 
@@ -17,60 +17,129 @@
   var newUserFormEl = document.querySelector('.user-form.create');
   var updateUserFormEl = document.querySelector('.user-form.update');
 
+  var view = {
+    hasClass: function (el, className) {
+      return el.classList.contains(className);
+    },
+    removeClass: function (el, className) {
+      el.classList.remove(className);
+    },
+    addClass: function (el, className) {
+      el.classList.add(className);
+    },
+    hideElement: function (el) {
+      el.style.display = 'none';
+    },
+    showBlockElement: function (el) {
+      el.style.display = 'block';
+    },
+    showInlineBlockElement: function (el) {
+      el.style.display = 'inline-block';
+    },
+    isBlockElement: function (el) {
+      return el.style.display === 'block';
+    },
+    createElement: function (tagName) {
+      return document.createElement(tagName);
+    },
+    getElement: function (el, selector) {
+      if (typeof el === 'string') {
+        selector = el;
+        el = document;
+      }
+      return el.querySelector(selector);
+    },
+    getElements: function (el, selector) {
+      if (typeof el === 'string') {
+        selector = el;
+        el = document;
+      }
+      return el.querySelectorAll(selector);
+    },
+    getElementValue: function (el) {
+      return el.value;
+    },
+    setElementValue: function (el, value) {
+      el.value = value;
+    },
+    clearElementValue: function (el) {
+      el.value = '';
+    },
+    getDataAttr: function (el, attr) {
+      return el.dataset[attr];
+    },
+    setDataAttr: function (el, attr, value) {
+      el.dataset[attr] = value;
+    },
+    updateText: function (el, text) {
+      el.textContent = text;
+    },
+    forEach: function (elements, cb) {
+      Array.prototype.forEach.call(elements, cb);
+    },
+    addChild: function (el, child) {
+      el.appendChild(child);
+    }
+  };
+
   newUserSelectionEl.addEventListener('click', function createNewUser (e) {
-    if (!e.target.classList.contains('selection')) {
+    if (!view.hasClass(e.target, 'selection')) {
       return;
     }
 
-    Array.prototype.forEach.call(e.target.parentElement.querySelectorAll('li'), function reset (el) {
-      el.classList.remove('selected');
+    view.forEach(view.getElements(e.currentTarget, 'li'), function reset (el) {
+      if (el !== e.target) {
+        view.removeClass(el, 'selected');
+      } else {
+        view.addClass(el, 'selected');
+      }
     });
 
-    e.target.classList.add('selected');
-
-    if (newUserFormEl.style.display !== 'block') {
-      newUserFormEl.style.display = 'block';
+    if (!view.isBlockElement(newUserFormEl)) {
+      view.showBlockElement(newUserFormEl);
     } else {
-      newUserFormEl.querySelector('.success-message').style.display = 'none';
-      newUserFormEl.querySelector('button.submit').style.display = 'inline-block';
-      newUserFormEl.querySelector('button.cancel').style.display = 'inline-block';
-      newUserFormEl.querySelector('button.close').style.display = 'none';
-      Array.prototype.forEach.call(newUserFormEl.querySelectorAll('input'), function reset (el) {
-        el.value = '';
+      view.hideElement(view.getElement(newUserFormEl, '.success-message'));
+      view.showInlineBlockElement(view.getElement(newUserFormEl, 'button.submit'));
+      view.showInlineBlockElement(view.getElement(newUserFormEl, 'button.cancel'));
+      view.hideElement(view.getElement(newUserFormEl, 'button.close'));
+      view.forEach(view.getElements(newUserFormEl, 'input'), function reset (el) {
+        view.clearElementValue(el);
       });
     }
 
-    newUserFormEl.querySelector('select').value = e.target.dataset.type;
+    view.setElementValue(view.getElement(newUserFormEl, 'select'), view.getDataAttr(e.target, 'type'));
   });
 
   existingUserListEl.addEventListener('click', function modifyUser (e) {
-    if (!e.target.classList.contains('list-item')) {
+    if (!view.hasClass(e.target, 'list-item')) {
       return;
     }
 
-    Array.prototype.forEach.call(e.target.parentElement.querySelectorAll('li'), function reset (el) {
-      el.classList.remove('selected');
+    view.forEach(view.getElements(e.currentTarget, 'li'), function reset (el) {
+      if (el !== e.target) {
+        view.removeClass(el, 'selected');
+      } else {
+        view.addClass(el, 'selected');
+      }
     });
 
-    e.target.classList.add('selected');
-
-    if (updateUserFormEl.style.display !== 'block') {
-      updateUserFormEl.style.display = 'block';
+    if (!view.isBlockElement(updateUserFormEl)) {
+      view.showBlockElement(updateUserFormEl);
     } else {
-      updateUserFormEl.querySelector('.success-message').style.display = 'none';
-      updateUserFormEl.querySelector('button.submit').style.display = 'inline-block';
-      updateUserFormEl.querySelector('button.cancel').style.display = 'inline-block';
-      updateUserFormEl.querySelector('button.close').style.display = 'none';
+      view.hideElement(view.getElement(updateUserFormEl, '.success-message'));
+      view.showInlineBlockElement(view.getElement(updateUserFormEl, 'button.submit'));
+      view.showInlineBlockElement(view.getElement(updateUserFormEl, 'button.cancel'));
+      view.hideElement(view.getElement(updateUserFormEl, 'button.close'));
     }
 
-    var inputs = updateUserFormEl.querySelectorAll('input');
-    targetUser = userCollection[e.target.dataset.id];
+    var targetUserID = view.getDataAttr(e.target, 'id');
+    targetUser = userCollection[targetUserID];
 
-    for (var i = 0; i < inputs.length; i++) {
-      inputs[i].value = targetUser[inputs[i].id];
-    }
+    view.forEach(view.getElements(updateUserFormEl, 'input'), function (el) {
+      el.value = targetUser[el.id];
+    });
 
-    updateUserFormEl.querySelector('select').value = targetUser.type;
+    view.setElementValue(view.getElement(updateUserFormEl, 'select'), targetUser.type)
   });
 
   newUserFormEl.addEventListener('click', function onButtonClick (e) {
@@ -78,52 +147,56 @@
       return;
     }
 
-    if (e.target.classList.contains('close') || e.target.classList.contains('cancel')) {
-      e.currentTarget.style.display = 'none';
-      e.currentTarget.querySelector('.success-message').style.display = 'none';
-      e.currentTarget.querySelector('button.submit').style.display = 'inline-block';
-      e.currentTarget.querySelector('button.cancel').style.display = 'inline-block';
-      e.currentTarget.querySelector('button.close').style.display = 'none';
-      Array.prototype.forEach.call(e.currentTarget.querySelectorAll('input'), function reset (el) {
-        el.value = '';
+    if (view.hasClass(e.target, 'close') || view.hasClass(e.target, 'cancel')) {
+      view.hideElement(e.currentTarget);
+      view.removeClass(e.currentTarget, 'error');
+      view.hideElement(view.getElement(e.currentTarget, '.success-message'));
+      view.showInlineBlockElement(view.getElement(e.currentTarget, 'button.submit'));
+      view.showInlineBlockElement(view.getElement(e.currentTarget, 'button.cancel'));
+      view.hideElement(view.getElement(e.currentTarget, 'button.close'));
+      view.forEach(view.getElements(e.currentTarget, 'input'), function (el) {
+        view.clearElementValue(el);
       });
-      Array.prototype.forEach.call(newUserSelectionEl.querySelectorAll('li'), function reset (el) {
-        el.classList.remove('selected');
+      view.forEach(view.getElements(newUserSelectionEl, 'li'), function (el) {
+        view.removeClass(el, 'selected');
       });
       return;
     }
 
-    var user = {};
-    var inputElements = e.currentTarget.querySelectorAll('input');
+    var user = {
+      id: userId,
+      type: Number(view.getElementValue(view.getElement(e.currentTarget, 'select')))
+    };
 
-    for (var i = 0; i < inputElements.length; i++) {
-      user[inputElements[i].id] = inputElements[i].value;
+    var hasEmptyField = false;
+
+    view.forEach(view.getElements(e.currentTarget, 'input'), function (el) {
+      if (!el.value) {
+        hasEmptyField = true;
+      }
+
+      user[el.id] = el.value;
+    });
+
+    if (hasEmptyField) {
+      view.addClass(e.currentTarget, 'error');
+      return;
     }
 
-    user.type = Number(e.currentTarget.querySelector('select').value);
-
-    user.id = userId;
     userCollection[userId] = user;
     userId++;
 
-    var listEl = document.createElement('li');
-    listEl.classList.add('list-item');
-    listEl.textContent = user.username;
-    listEl.dataset.id = user.id;
+    var listEl = view.createElement('li');
+    view.addClass(listEl, 'list-item');
+    view.updateText(listEl, user.username);
+    view.setDataAttr(listEl, 'id', user.id);
+    view.addChild(existingUserListEl, listEl);
 
-    existingUserListEl.appendChild(listEl);
-
-    var successMsgEl = e.currentTarget.querySelector('.success-message');
-    successMsgEl.style.display = 'block';
-
-    var submitButtonEl = e.currentTarget.querySelector('button.submit');
-    submitButtonEl.style.display = 'none';
-
-    var cancelButtonEl = e.currentTarget.querySelector('button.cancel');
-    cancelButtonEl.style.display = 'none';
-
-    var closeButtonEl = e.currentTarget.querySelector('button.close');
-    closeButtonEl.style.display = 'inline-block';
+    view.removeClass(e.currentTarget, 'error');
+    view.showBlockElement(view.getElement(e.currentTarget, '.success-message'));
+    view.hideElement(view.getElement(e.currentTarget, 'button.submit'));
+    view.hideElement(view.getElement(e.currentTarget, 'button.cancel'));
+    view.showInlineBlockElement(view.getElement(e.currentTarget, 'button.close'));
   });
 
   updateUserFormEl.addEventListener('click', function onButtonClick (e) {
@@ -131,42 +204,56 @@
       return;
     }
 
-    if (e.target.classList.contains('close') || e.target.classList.contains('cancel')) {
-      e.currentTarget.style.display = 'none';
-      e.currentTarget.querySelector('.success-message').style.display = 'none';
-      e.currentTarget.querySelector('button.submit').style.display = 'inline-block';
-      e.currentTarget.querySelector('button.cancel').style.display = 'inline-block';
-      e.currentTarget.querySelector('button.close').style.display = 'none';
-      Array.prototype.forEach.call(e.currentTarget.querySelectorAll('input'), function reset (el) {
-        el.value = '';
+    if (view.hasClass(e.target, 'close') || view.hasClass(e.target, 'cancel')) {
+      view.hideElement(e.currentTarget);
+      view.removeClass(e.currentTarget, 'error');
+      view.hideElement(view.getElement(e.currentTarget, '.success-message'));
+      view.showInlineBlockElement(view.getElement(e.currentTarget, 'button.submit'));
+      view.showInlineBlockElement(view.getElement(e.currentTarget, 'button.cancel'));
+      view.hideElement(view.getElement(e.currentTarget, 'button.close'));
+      view.forEach(view.getElements(e.currentTarget, 'input'), function (el) {
+        view.clearElementValue(el);
       });
-      Array.prototype.forEach.call(existingUserListEl.querySelectorAll('li'), function reset (el) {
-        el.classList.remove('selected');
+      view.forEach(view.getElements(existingUserListEl, 'li'), function (el) {
+        view.removeClass(el, 'selected');
       });
       return;
     }
 
-    var inputElements = e.currentTarget.querySelectorAll('input');
+    var hasEmptyField = false;
 
-    for (var i = 0; i < inputElements.length; i++) {
-      targetUser[inputElements[i].id] = inputElements[i].value;
+    view.forEach(view.getElements(e.currentTarget, 'input'), function (el) {
+      if (!el.value) {
+        hasEmptyField = true;
+      }
+
+      targetUser[el.id] = el.value;
+    });
+
+    if (hasEmptyField) {
+      view.addClass(e.currentTarget, 'error');
+      return;
     }
 
-    targetUser.type = Number(e.currentTarget.querySelector('select').value);
+    targetUser.type = Number(view.getElementValue(view.getElement(e.currentTarget, 'select')));
 
-    var userItemEl = existingUserListEl.querySelector('[data-id="' + targetUser.id + '"]');
-    userItemEl.textContent = targetUser.username;
+    view.updateText(view.getElement(existingUserListEl, '[data-id="' + targetUser.id + '"]'), targetUser.username);
 
-    var successMsgEl = e.currentTarget.querySelector('.success-message');
-    successMsgEl.style.display = 'block';
+    view.removeClass(e.currentTarget, 'error');
+    view.showBlockElement(view.getElement(e.currentTarget, '.success-message'));
+    view.hideElement(view.getElement(e.currentTarget, 'button.submit'));
+    view.hideElement(view.getElement(e.currentTarget, 'button.cancel'));
+    view.showInlineBlockElement(view.getElement(e.currentTarget, 'button.close'));
+  });
 
-    var submitButtonEl = e.currentTarget.querySelector('button.submit');
-    submitButtonEl.style.display = 'none';
-
-    var cancelButtonEl = e.currentTarget.querySelector('button.cancel');
-    cancelButtonEl.style.display = 'none';
-
-    var closeButtonEl = e.currentTarget.querySelector('button.close');
-    closeButtonEl.style.display = 'inline-block';
+  view.getElement(newUserFormEl, 'select').addEventListener('change', function (e) {
+    var target = view.getElement(newUserSelectionEl, 'li[data-type="' + e.currentTarget.value + '"]');
+    view.forEach(view.getElements(newUserSelectionEl, 'li'), function (el) {
+      if (el !== target) {
+        view.removeClass(el, 'selected');
+      } else {
+        view.addClass(el, 'selected');
+      }
+    });
   });
 })();
