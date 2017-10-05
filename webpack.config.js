@@ -8,7 +8,12 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 
 const config = {
   entry: [
-    './src/index.js',
+    './src/js/View.js',
+    './src/js/ListView.js',
+    './src/js/CurrentUserListView.js',
+    './src/js/UserFormView.js',
+    './src/js/UpdateUserFormView.js',
+    './src/js/index.js',
     './src/style.less'
   ],
   output: {
