@@ -75,7 +75,9 @@
       this.updateUserFormView.showSuccessMode();
     },
     updateUserList: function (userType) {
-      this.newUserListView.updateSelection('type', userType);
+      this.newUserListView.updateSelection({
+        type: userType
+      });
     },
     init: function () {
       this.userCollectionModel = userCollectionModel;
@@ -85,15 +87,15 @@
       this.createUserFormView = new UserFormView('.user-form.create');
       this.updateUserFormView = new UpdateUserFormView('.user-form.update');
 
-      this.newUserListView.onListItemClick(this.onNewUserSelection.bind(this));
-      this.currentUserListView.onListItemClick(this.onCurrentUserSelection.bind(this));
-      this.createUserFormView.onCancel(this.cancelNewUserCreation.bind(this));
-      this.createUserFormView.onClose(this.cancelNewUserCreation.bind(this));
-      this.createUserFormView.onSave(this.createUser.bind(this));
-      this.createUserFormView.onUserTypeChange(this.updateUserList.bind(this));
-      this.updateUserFormView.onCancel(this.cancelCurrentUserUpdate.bind(this));
-      this.updateUserFormView.onClose(this.cancelCurrentUserUpdate.bind(this));
-      this.updateUserFormView.onSave(this.updateUser.bind(this));
+      this.newUserListView.onListItemClick(this.onNewUserSelection);
+      this.currentUserListView.onListItemClick(this.onCurrentUserSelection);
+      this.createUserFormView.onCancel(this.cancelNewUserCreation);
+      this.createUserFormView.onClose(this.cancelNewUserCreation);
+      this.createUserFormView.onSave(this.createUser);
+      this.createUserFormView.onUserTypeChange(this.updateUserList);
+      this.updateUserFormView.onCancel(this.cancelCurrentUserUpdate);
+      this.updateUserFormView.onClose(this.cancelCurrentUserUpdate);
+      this.updateUserFormView.onSave(this.updateUser);
     }
   };
 

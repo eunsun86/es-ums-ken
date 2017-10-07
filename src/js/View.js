@@ -7,7 +7,7 @@ View.prototype.removeClass = function (className) {
 };
 
 View.prototype.hide = function () {
-  this.element.style.display = 'none';
+  this.element.remove();
 };
 
 View.prototype.show = function () {
@@ -46,4 +46,4 @@ View.forEach = function (elements, cb) {
   Array.prototype.forEach.call(elements, cb);
 };
 
-window.View = View;
+// window.View = View;
