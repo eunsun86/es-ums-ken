@@ -32,7 +32,7 @@ ListView.prototype.onListItemClick = function (cb) {
       return;
     }
 
-    cb(e);
+    cb(e.target.dataset);
   });
 };
 

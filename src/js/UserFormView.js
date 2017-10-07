@@ -75,7 +75,9 @@ UserFormView.prototype.onClose = function (cb) {
 };
 
 UserFormView.prototype.onUserTypeChange = function (cb) {
-  View.getElement(this.element, 'select').addEventListener('change', cb);
+  View.getElement(this.element, 'select').addEventListener('change', function (e) {
+    cb(e.currentTarget.value);
+  });
 };
 
 window.UserFormView = UserFormView;

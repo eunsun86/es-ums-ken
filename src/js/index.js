@@ -1,118 +1,101 @@
-/* Javascript은 이 파일에서만 작성해주세요. */
-
 (function() {
-  var userTypes = {
+  var USER_TYPES = {
     0: '일반인',
     1: '컴공학생',
     2: '웹개발자',
     3: '웹디자이너',
     4: '사장님'
   };
-  var userCollection = [];
-  var userId = 0;
-  var targetUser = null;
 
-  function onNewUserSelection (e) {
-    if (createUserFormView.isHidden()) {
-      createUserFormView.show();
-    } else {
-      createUserFormView.reset();
-    }
-
-    var userType = e.target.dataset.type;
-
-    newUserListView.updateSelection('type', userType);
-    createUserFormView.updateUserTypeSelection(userType);
-  }
-
-  function onCurrentUserSelection (e) {
-    var targetUserID = e.target.dataset.id;
-    currentUserListView.updateSelection('id', targetUserID);
-
-    if (updateUserFormView.isHidden()) {
-      updateUserFormView.show();
-    } else {
-      updateUserFormView.reset();
-    }
-
-    targetUser = userCollection[targetUserID];
-    updateUserFormView.fill(targetUser);
-  }
-
-  function cancelNewUserCreation () {
-    createUserFormView.hide();
-    createUserFormView.reset();
-    newUserListView.clearSelection();
-  }
-
-  function cancelCurrentUserUpdate () {
-    updateUserFormView.hide();
-    updateUserFormView.reset();
-    currentUserListView.clearSelection();
-  }
-
-  function createUser (e) {
-    var user = {
-      id: userId,
-      type: createUserFormView.getUserTypeFieldValue()
-    };
-
-    var inspectionResult = createUserFormView.inspect();
-
-    if (inspectionResult.error) {
-      createUserFormView.triggerError();
-      return;
-    } else {
-      for (var prop in inspectionResult.fieldValues) {
-        if (inspectionResult.fieldValues.hasOwnProperty(prop)) {
-          user[prop] = inspectionResult.fieldValues[prop];
-        }
+  var appController = {
+    onNewUserSelection: function (data) {
+      if (this.createUserFormView.isHidden()) {
+        this.createUserFormView.show();
+      } else {
+        this.createUserFormView.reset();
       }
 
-      userCollection[userId] = user;
-      userId++;
-    }
+      var userType = data.type;
 
-    currentUserListView.addNewUser(user.id, user.username);
-    createUserFormView.showSuccessMode();
-  }
+      this.newUserListView.updateSelection('type', userType);
+      this.createUserFormView.updateUserTypeSelection(userType);
+    },
+    onCurrentUserSelection: function (data) {
+      this.currentUserListView.updateSelection('id', data.id);
 
-  function updateUser (e) {
-    var inspectionResult = updateUserFormView.inspect();
-
-    if (inspectionResult.error) {
-      updateUserFormView.triggerError();
-      return;
-    }
-
-    for (var prop in inspectionResult.fieldValues) {
-      if (inspectionResult.fieldValues.hasOwnProperty(prop)) {
-        targetUser[prop] = inspectionResult.fieldValues[prop];
+      if (this.updateUserFormView.isHidden()) {
+        this.updateUserFormView.show();
+      } else {
+        this.updateUserFormView.reset();
       }
+
+      this.userCollectionModel.selectedUser = this.userCollectionModel.getUser(data.id);
+      this.updateUserFormView.fill(this.userCollectionModel.selectedUser);
+    },
+    cancelNewUserCreation: function () {
+      this.createUserFormView.hide();
+      this.createUserFormView.reset();
+      this.newUserListView.clearSelection();
+    },
+    cancelCurrentUserUpdate: function () {
+      this.updateUserFormView.hide();
+      this.updateUserFormView.reset();
+      this.currentUserListView.clearSelection();
+    },
+    createUser: function () {
+      var userData;
+      var inspectionResult = this.createUserFormView.inspect();
+
+      if (inspectionResult.error) {
+        this.createUserFormView.triggerError();
+        return;
+      }
+
+      userData = userCollectionModel.createUser(Object.assign({}, {
+        type: this.createUserFormView.getUserTypeFieldValue()
+      }, inspectionResult.fieldValues));
+
+      this.currentUserListView.addNewUser(userData.id, userData.username);
+      this.createUserFormView.showSuccessMode();
+    },
+    updateUser: function () {
+      var inspectionResult = this.updateUserFormView.inspect();
+
+      if (inspectionResult.error) {
+        this.updateUserFormView.triggerError();
+        return;
+      }
+
+      var newUserData = Object.assign({}, inspectionResult.fieldValues, {
+        type: this.updateUserFormView.getUserTypeFieldValue()
+      });
+
+      this.userCollectionModel.updateUser(this.userCollectionModel.selectedUser.id, newUserData);
+      this.currentUserListView.updateUsername(this.userCollectionModel.selectedUser.id, this.userCollectionModel.selectedUser.username);
+      this.updateUserFormView.showSuccessMode();
+    },
+    updateUserList: function (userType) {
+      this.newUserListView.updateSelection('type', userType);
+    },
+    init: function () {
+      this.userCollectionModel = userCollectionModel;
+
+      this.newUserListView = new ListView('.new-user-selection');
+      this.currentUserListView = new CurrentUserListView('.existing-user-list');
+      this.createUserFormView = new UserFormView('.user-form.create');
+      this.updateUserFormView = new UpdateUserFormView('.user-form.update');
+
+      this.newUserListView.onListItemClick(this.onNewUserSelection.bind(this));
+      this.currentUserListView.onListItemClick(this.onCurrentUserSelection.bind(this));
+      this.createUserFormView.onCancel(this.cancelNewUserCreation.bind(this));
+      this.createUserFormView.onClose(this.cancelNewUserCreation.bind(this));
+      this.createUserFormView.onSave(this.createUser.bind(this));
+      this.createUserFormView.onUserTypeChange(this.updateUserList.bind(this));
+      this.updateUserFormView.onCancel(this.cancelCurrentUserUpdate.bind(this));
+      this.updateUserFormView.onClose(this.cancelCurrentUserUpdate.bind(this));
+      this.updateUserFormView.onSave(this.updateUser.bind(this));
     }
+  };
 
-    targetUser.type = updateUserFormView.getUserTypeFieldValue();
-
-    currentUserListView.updateUsername(targetUser.id, targetUser.username);
-    updateUserFormView.showSuccessMode();
-  }
-
-  function updateUserList (e) {
-    newUserListView.updateSelection('type', e.currentTarget.value);
-  }
-
-  var newUserListView = new ListView('.new-user-selection');
-  var currentUserListView = new CurrentUserListView('.existing-user-list');
-  var createUserFormView = new UserFormView('.user-form.create');
-  var updateUserFormView = new UpdateUserFormView('.user-form.update');
-
-  newUserListView.onListItemClick(onNewUserSelection);
-  currentUserListView.onListItemClick(onCurrentUserSelection);
-  createUserFormView.onCancel(cancelNewUserCreation);
-  createUserFormView.onClose(cancelNewUserCreation);
-  createUserFormView.onSave(createUser);
-  createUserFormView.onUserTypeChange(updateUserList);
-  updateUserFormView.onCancel(cancelCurrentUserUpdate);
-  updateUserFormView.onClose(cancelCurrentUserUpdate);
-  updateUserFormView.onSave(updateUser);
+  appController.init();
 })();
