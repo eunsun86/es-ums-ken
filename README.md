@@ -9,6 +9,7 @@
 - `v4`: 파일 분류
 - `v5`: MVC
 - `v6`: MVC with IIFE pattern
+- `v7`: Debugging
 
 ---
 
