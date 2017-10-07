@@ -8,6 +8,7 @@
 - `v3`: OOP 3단계
 - `v4`: 파일 분류
 - `v5`: MVC
+- `v6`: MVC with IIFE pattern
 
 ---
 
