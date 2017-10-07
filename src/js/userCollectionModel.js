@@ -1,30 +1,33 @@
-var userCollectionModel = {
-  selectedUser: null,
-  userCollection: [],
-  userIDCount: 0,
-  createUser: function (userData) {
-    var user = {
-      id: this.userIDCount
-    };
+var userCollectionModel = (function () {
+  var userIDCount = 0;
+  var userCollection = [];
 
-    this.userCollection[user.id] = user;
-    this.updateUser(user.id, userData);
-    this.userIDCount++;
+  return {
+    selectedUser: null,
+    createUser: function (userData) {
+      var user = {
+        id: userIDCount
+      };
 
-    return this.userCollection[user.id];
-  },
-  getUser: function (userID) {
-    return this.userCollection[userID];
-  },
-  updateUser: function (userID, newUserData) {
-    var targetUser = this.userCollection[userID];
+      userCollection[user.id] = user;
+      this.updateUser(user.id, userData);
+      userIDCount++;
 
-    for (var prop in newUserData) {
-      if (newUserData.hasOwnProperty(prop)) {
-        targetUser[prop] = newUserData[prop];
+      return userCollection[user.id];
+    },
+    getUser: function (userID) {
+      return userCollection[userID];
+    },
+    updateUser: function (userID, newUserData) {
+      var targetUser = userCollection[userID];
+
+      for (var prop in newUserData) {
+        if (newUserData.hasOwnProperty(prop)) {
+          targetUser[prop] = newUserData[prop];
+        }
       }
     }
-  }
-};
+  };
+})();
 
 window.userCollectionModel = userCollectionModel;
