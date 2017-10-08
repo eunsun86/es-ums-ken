@@ -1,5 +1,6 @@
 function View (selector) {
   this.element = document.querySelector(selector);
+  this.displayType = 'block';
 }
 
 View.prototype.removeClass = function (className) {

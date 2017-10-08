@@ -77,13 +77,29 @@
     updateUserList: function (userType) {
       this.newUserListView.updateSelection('type', userType);
     },
+    onRouteChange: function (data) {
+      this.router.set(data.route);
+    },
+    onCreateRoute: function () {
+      this.createPageView.show();
+      this.userListPageView.hide();
+      this.navigationMenuView.select('create');
+    },
+    onListRoute: function () {
+      this.userListPageView.show();
+      this.createPageView.hide();
+      this.navigationMenuView.select('list');
+    },
     init: function () {
       this.userCollectionModel = userCollectionModel;
 
+      this.createPageView = new View('#create-user-view');
+      this.userListPageView = new View('#user-list-view');
       this.newUserListView = new ListView('.new-user-selection');
       this.currentUserListView = new CurrentUserListView('.existing-user-list');
       this.createUserFormView = new UserFormView('.user-form.create');
       this.updateUserFormView = new UpdateUserFormView('.user-form.update');
+      this.navigationMenuView = new NavigationMenuView('#navigation-menu ul');
 
       this.newUserListView.onListItemClick(this.onNewUserSelection.bind(this));
       this.currentUserListView.onListItemClick(this.onCurrentUserSelection.bind(this));
@@ -94,6 +110,15 @@
       this.updateUserFormView.onCancel(this.cancelCurrentUserUpdate.bind(this));
       this.updateUserFormView.onClose(this.cancelCurrentUserUpdate.bind(this));
       this.updateUserFormView.onSave(this.updateUser.bind(this));
+      this.navigationMenuView.onListItemClick(this.onRouteChange.bind(this));
+
+      this.router = appRouter;
+      this.router.on('create', this.onCreateRoute.bind(this));
+      this.router.on('list', this.onListRoute.bind(this));
+
+      if (window.location.hash === '#/list') {
+        this.router.set('list');
+      }
     }
   };
 

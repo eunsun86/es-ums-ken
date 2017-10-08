@@ -73,6 +73,31 @@ ul {
   }
 }
 
+#navigation-menu {
+  ul {
+    list-style: none;
+  }
+
+  li {
+    display: inline-block;
+    background-color: white;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+
+    &.selected {
+      background-color: blue;
+      color: white;
+    }
+  }
+}
+
+#user-list-view {
+  display: none;
+}
+
 .user-form {
   border: 1px solid black;
   border-radius: 5px;

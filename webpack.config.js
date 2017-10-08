@@ -8,10 +8,12 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 
 const config = {
   entry: [
+    './src/js/appRouter.js',
     './src/js/userCollectionModel.js',
     './src/js/View.js',
     './src/js/ListView.js',
     './src/js/CurrentUserListView.js',
+    './src/js/NavigationMenuView.js',
     './src/js/UserFormView.js',
     './src/js/UpdateUserFormView.js',
     './src/js/index.js',
