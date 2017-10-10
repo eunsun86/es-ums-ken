@@ -8,6 +8,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 
 const config = {
   entry: [
+    './src/js/messenger.js',
     './src/js/appRouter.js',
     './src/js/userCollectionModel.js',
     './src/js/View.js',

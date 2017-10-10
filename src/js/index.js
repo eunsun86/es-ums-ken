@@ -7,6 +7,8 @@
     4: '사장님'
   };
 
+  var USER_TYPE_CHANGE = 'USER_TYPE_CHANGE';
+
   var appController = {
     onNewUserSelection: function (data) {
       if (this.createUserFormView.isHidden()) {
@@ -106,7 +108,10 @@
       this.createUserFormView.onCancel(this.cancelNewUserCreation.bind(this));
       this.createUserFormView.onClose(this.cancelNewUserCreation.bind(this));
       this.createUserFormView.onSave(this.createUser.bind(this));
-      this.createUserFormView.onUserTypeChange(this.updateUserList.bind(this));
+      // this.createUserFormView.onUserTypeChange(this.updateUserList.bind(this));
+      this.createUserFormView.onUserTypeChange(function (userType) {
+        messenger.publish(USER_TYPE_CHANGE, userType);
+      });
       this.updateUserFormView.onCancel(this.cancelCurrentUserUpdate.bind(this));
       this.updateUserFormView.onClose(this.cancelCurrentUserUpdate.bind(this));
       this.updateUserFormView.onSave(this.updateUser.bind(this));
@@ -119,6 +124,8 @@
       if (window.location.hash === '#/list') {
         this.router.set('list');
       }
+
+      messenger.subscribe(USER_TYPE_CHANGE, this.updateUserList.bind(this));
     }
   };
 
