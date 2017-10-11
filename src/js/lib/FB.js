@@ -16,7 +16,7 @@ window.onlogin = function () {
 
     if (response.status === 'connected') {
       window.IS_LOGGEDIN = true;
-      messenger.publish('LOGIN', response.authResponse.accessToken);
+      messenger.publish('LOGIN');
     }
   });
 

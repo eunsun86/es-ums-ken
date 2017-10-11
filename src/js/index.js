@@ -140,8 +140,8 @@
         this.router.set('login');
       }
 
-      messenger.subscribe(LOGIN, function (token) {
-        window.IS_LOGGEDIN = token;
+      messenger.subscribe(LOGIN, function () {
+        window.IS_LOGGEDIN = true;
         that.router.set('create');
       });
 
