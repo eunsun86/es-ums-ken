@@ -108,7 +108,6 @@
       this.createUserFormView.onCancel(this.cancelNewUserCreation.bind(this));
       this.createUserFormView.onClose(this.cancelNewUserCreation.bind(this));
       this.createUserFormView.onSave(this.createUser.bind(this));
-      // this.createUserFormView.onUserTypeChange(this.updateUserList.bind(this));
       this.createUserFormView.onUserTypeChange(function (userType) {
         messenger.publish(USER_TYPE_CHANGE, userType);
       });
