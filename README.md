@@ -35,7 +35,7 @@
 아래의 테스트 사용자 이메일과 비밀번호를 이용하여 페이스북 관련 기능을 테스트할수 있습니다.
 
 ```
-< 이메일 >
+< 이메일 > - 아무거나 골라서 사용하세요.
 jeonduhwan_gbprdvg_jeonduhwan@tfbnw.net
 baggeunhye_joaqywz_baggeunhye@tfbnw.net
 gim-yeongsam_auqkyyh_gim-yeongsam@tfbnw.net
@@ -55,7 +55,7 @@ imusong_jxyotxv_imusong@tfbnw.net
 elbiseu_posylpc_elbiseu@tfbnw.net
 sintaeyong_llqmkhj_sintaeyong@tfbnw.net
 
-< 비밀번호 (모든 테스트 사용자 공통) >
+< 비밀번호 > - 모든 테스트 사용자 공통
 a1b2c3d4!
 ```
 
