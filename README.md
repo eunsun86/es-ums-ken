@@ -13,20 +13,51 @@
 - `v8`: Debugging Practice
 - `v9`: Routing
 - `v10`: Publish & Subscribe
+- `v11`: Async programming
 
 ---
 
 ### 필수 사항
 
-여러분은 바닐라코딩 사용자 관리 시스템에 아래의 내용처럼 현재 코드를 Refactoring하셔야 합니다.
+여러분은 바닐라코딩 사용자 관리 시스템에 페이스북 API를 이용하여 아래의 내용처럼 현재 코드를 수정 혹은 추가하셔야 합니다.
 
-1. Pub-Sub을 이용하기
+1. 로그인한 사용자의 사진과 이름 보여주기
 
-    - 사용자를 새로 만들 경우, 현재 사용자 리스트에 추가됩니다. 기존의 코드를 읽어보시고 Pub-Sub 패턴을 이용하여 UI에 사용자가 추가되도록 Refactoring 해보세요.
+    - 보여주는 형식은 자유롭게 하여, 로그인한 사용자의 사진과 이름을 사용자 생성 그리고 현재 사용자 리스트 페이지에서 볼 수 있게 적용해주세요.
 
-2. 불필요한 Subscription 처리하기
+2. 로그인시, 로그인한 사용자의 친구들을 현재 사용자 리스트에 추가해서 보여주기
 
-    - 현재 적용된 Pub-Sub은 모두 create 페이지에서만 사용됩니다. list페이지로 이동시, subscription을 폐기하고 다시 create 페이지로 돌아올시 subscription을 다시 등록하도록 refactoring을 해주세요. (messenger에 listener를 폐기할 수 있는 기능을 먼저 추가하셔야 합니다.)
+    - 사용자가 로그인할 경우, 사용자의 친구들을 현재 사용자 리스트에 추가해주세요. (친구들의 별명은 편하신대로 처리해주세요.)
+    - 현재 사용자 리스트 페이지로 이동할 경우, 친구들의 이름들이 이미 리스트에 추가되어 있어야 합니다.
+
+**페이스북 테스트 사용자들**
+
+아래의 테스트 사용자 이메일과 비밀번호를 이용하여 페이스북 관련 기능을 테스트할수 있습니다.
+
+```
+< 이메일 >
+jeonduhwan_gbprdvg_jeonduhwan@tfbnw.net
+baggeunhye_joaqywz_baggeunhye@tfbnw.net
+gim-yeongsam_auqkyyh_gim-yeongsam@tfbnw.net
+notaeu_botecab_notaeu@tfbnw.net
+nomuhyeon_oirzheh_nomuhyeon@tfbnw.net
+iseungman_uowsscf_iseungman@tfbnw.net
+imyeongbag_abzfyue_imyeongbag@tfbnw.net
+gimdaejung_viwqrmp_gimdaejung@tfbnw.net
+obama_qqykfzs_obama@tfbnw.net
+dolamppu_dpwcavs_dolamppu@tfbnw.net
+imija_vrunsfg_imija@tfbnw.net
+juhyeonmi_aikrsja_juhyeonmi@tfbnw.net
+nahun-a_rzkvbpa_nahun-a@tfbnw.net
+hyeoncheol_ektlakw_hyeoncheol@tfbnw.net
+nosayeon_anyrvxr_nosayeon@tfbnw.net
+imusong_jxyotxv_imusong@tfbnw.net
+elbiseu_posylpc_elbiseu@tfbnw.net
+sintaeyong_llqmkhj_sintaeyong@tfbnw.net
+
+< 비밀번호 (모든 테스트 사용자 공통) >
+a1b2c3d4!
+```
 
 ---
 

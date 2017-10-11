@@ -2,8 +2,12 @@ var noop = function () {};
 
 var appRouter = {
   routeMap: {
+    login: {
+      path: '/#/login',
+      handler: noop
+    },
     create: {
-      path: '/#/',
+      path: '/#/create',
       handler: noop
     },
     list: {

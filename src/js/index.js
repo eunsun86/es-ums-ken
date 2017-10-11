@@ -8,6 +8,8 @@
   };
 
   var USER_TYPE_CHANGE = 'USER_TYPE_CHANGE';
+  var LOGIN = 'LOGIN';
+  var LOGOUT = 'LOGOUT';
 
   var appController = {
     onNewUserSelection: function (data) {
@@ -85,14 +87,23 @@
     onCreateRoute: function () {
       this.createPageView.show();
       this.userListPageView.hide();
+      this.navigationMenuView.show();
       this.navigationMenuView.select('create');
     },
     onListRoute: function () {
       this.userListPageView.show();
       this.createPageView.hide();
+      this.navigationMenuView.show();
       this.navigationMenuView.select('list');
     },
+    onLoginRoute: function () {
+      this.userListPageView.hide();
+      this.createPageView.hide();
+      this.navigationMenuView.hide();
+    },
     init: function () {
+      var that = this;
+
       this.userCollectionModel = userCollectionModel;
 
       this.createPageView = new View('#create-user-view');
@@ -117,12 +128,27 @@
       this.navigationMenuView.onListItemClick(this.onRouteChange.bind(this));
 
       this.router = appRouter;
+      this.router.on('login', this.onLoginRoute.bind(this));
       this.router.on('create', this.onCreateRoute.bind(this));
       this.router.on('list', this.onListRoute.bind(this));
 
-      if (window.location.hash === '#/list') {
+      if (window.location.hash === '#/list' && window.IS_LOGGEDIN) {
         this.router.set('list');
+      } else if (window.location.hash === '#/create' && window.IS_LOGGEDIN) {
+        this.router.set('create');
+      } else {
+        this.router.set('login');
       }
+
+      messenger.subscribe(LOGIN, function (token) {
+        window.IS_LOGGEDIN = token;
+        that.router.set('create');
+      });
+
+      messenger.subscribe(LOGOUT, function () {
+        window.IS_LOGGEDIN = null;
+        that.router.set('login');
+      });
 
       messenger.subscribe(USER_TYPE_CHANGE, this.updateUserList.bind(this));
     }
