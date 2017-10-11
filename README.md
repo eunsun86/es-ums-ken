@@ -32,7 +32,32 @@
     - 현재 사용자 리스트 페이지로 이동할 경우, 친구들의 이름들이 이미 리스트에 추가되어 있어야 합니다.
     - [관련 API 문서](https://developers.facebook.com/docs/graph-api/reference/user/friends/)(페이스북 로그인 필수)
 
-3. [보너스] 페이스북 API를 이용하여 본인 마음대로 주물러보세요!
+3. [보너스] 라이브로 배포하기!
+
+    - 본인 계정으로 페이스북 로그인
+    - [페이스북 API 페이지 방문](https://developers.facebook.com/)
+    - 오른쪽 상단 본인 프로필 사진으로 마우스 이동
+    - 드롭다운 메뉴에서 "새 앱 추가" 클릭
+    - 모달 Form에 새 앱 이름 작성, 연락처 이메일 작성후 "만들기" 클릭
+    - 앱 대쉬보드로 이동
+    - 앱 ID 복사
+    - `src/js/lib/FB.js` 5번째줄 가장 오른쪽에 위치한 appId에 해당하는 숫자를 본인 앱 ID로 교체
+    - [Netlify](netlify.com)방문/가입
+    - "New site from Git" 진행 (본인 github 계정 수락후 진행)
+    - 배포하기를 원하는 github 프로젝트 선택
+    - 배포하기를 원하는 브랜치 선택
+    - Build command란에 "npm run build" 입력
+    - Publish directory란에 "dist" 입력후, "Deploy site" 클릭
+    - "Site deploy in progress" 표시가 떠있는 동안 기다림
+    - 위의 메시지가 URL로 바뀌면 해당 URL 클릭/방문
+    - 페이스북 앱 대쉬보드로 이동
+    - 설정-기본설정 화면으로 이동
+    - 앱 도메인 칸에 Netlify에서 생성된 도메인 이름 입력
+    - "플랫폼 추가" 클릭후, 사이트 URL 입력
+    - 오른쪽 하단의 "변경 내용 저장" 클릭
+    - 앱 검수 탭으로 이동
+    - 앱을 공개하시겠어요? "예"로 변경
+    - 위 단계를 모두 마친후에도 문제가 있다면 슬랙에 질문을 올려주세요.
 
 **페이스북 테스트 사용자들**
 
