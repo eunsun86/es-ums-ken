@@ -1,3 +1,5 @@
+import Q from 'q';
+
 (function() {
   var USER_TYPES = {
     0: '일반인',
@@ -101,6 +103,34 @@
       this.createPageView.hide();
       this.navigationMenuView.hide();
     },
+    showCurrentUser: function (username, profileImgUrl) {
+      // TODO: Separate out as a View component
+      var userInfoEl = document.querySelector('.current-user-info');
+      var profileImgEl = userInfoEl.querySelector('.current-user-image');
+      var usernameEl = userInfoEl.querySelector('.current-username');
+
+      profileImgEl.src = profileImgUrl;
+      usernameEl.textContent = username;
+      userInfoEl.style.display = 'block';
+    },
+    hideCurrentUser: function () {
+      // TODO: Separate out as a View component
+      document.querySelector('.current-user-info').style.display = 'none';
+    },
+    getUsername: function () {
+      return promisify(function (resolve, reject) {
+        FB.api('/me', function (res) {
+          resolve(res.name);
+        });
+      });
+    },
+    getUserProfileImgUrl: function () {
+      return promisify(function (resolve, reject) {
+        FB.api('/me/picture?type=small', function (res) {
+          resolve(res.data.url);
+        });
+      });
+    },
     init: function () {
       var that = this;
 
@@ -143,10 +173,18 @@
       messenger.subscribe(LOGIN, function () {
         window.IS_LOGGEDIN = true;
         that.router.set('create');
+
+        Q.all([
+          that.getUsername(),
+          that.getUserProfileImgUrl()
+        ]).then(function (data) {
+          that.showCurrentUser(data[0], data[1]);
+        });
       });
 
       messenger.subscribe(LOGOUT, function () {
         window.IS_LOGGEDIN = null;
+        that.hideCurrentUser();
         that.router.set('login');
       });
 

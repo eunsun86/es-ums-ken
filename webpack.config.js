@@ -9,6 +9,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 const config = {
   entry: [
     './src/js/lib/FB.js',
+    './src/js/lib/Promise.js',
 
     './src/js/messenger.js',
     './src/js/appRouter.js',
