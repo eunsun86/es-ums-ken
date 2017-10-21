@@ -2,8 +2,8 @@
 
 ### 브랜치 가이드
 
-- `v0`: 순 바닐라
-- `v1`: OOP 1단계
+- `v0-vanilla`: 순 바닐라
+- `v1-oop1`: OOP 1단계
 
 ---
 
@@ -52,8 +52,8 @@ MAC/Window: control + C
 // 프로젝트 디렉토리에서 아래의 명령어를 순서대로 실행한다.
 git status
 git add FILE_NAME
-git commit -m "COMMIT_MSG"
-git push origin master
+git commit -m "COMMIT_MSG" (COMMIT_MSG 부분은 본인이 작업한 내용의 요약을 써주시면 됩니다.)
+git push origin v1-oop1
 ```
 
 ---
