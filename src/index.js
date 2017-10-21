@@ -12,114 +12,126 @@
   var userId = 0;
   var targetUser = null;
 
-  var newUserSelectionEl = document.querySelector('.new-user-selection');
-  var existingUserListEl = document.querySelector('.existing-user-list');
-  var newUserFormEl = document.querySelector('.user-form.create');
-  var updateUserFormEl = document.querySelector('.user-form.update');
-
   var view = {
-    hasClass: function (el, className) {
+    hasClass: function hasClass (el, className) {
       return el.classList.contains(className);
     },
-    removeClass: function (el, className) {
+    removeClass: function removeClass (el, className) {
       el.classList.remove(className);
     },
-    addClass: function (el, className) {
+    addClass: function addClass (el, className) {
       el.classList.add(className);
     },
-    hideElement: function (el) {
+    hideElement: function hideElement (el) {
       el.style.display = 'none';
     },
-    showBlockElement: function (el) {
+    showBlockElement: function showBlockElement (el) {
       el.style.display = 'block';
     },
-    showInlineBlockElement: function (el) {
+    showInlineBlockElement: function showInlineBlockElement (el) {
       el.style.display = 'inline-block';
     },
-    isBlockElement: function (el) {
+    isBlockElement: function isBlockElement (el) {
       return el.style.display === 'block';
     },
-    createElement: function (tagName) {
+    createElement: function createElement (tagName) {
       return document.createElement(tagName);
     },
-    getElement: function (el, selector) {
+    getElement: function getElement (el, selector) {
       if (typeof el === 'string') {
         selector = el;
         el = document;
       }
       return el.querySelector(selector);
     },
-    getElements: function (el, selector) {
+    getElements: function getElements (el, selector) {
       if (typeof el === 'string') {
         selector = el;
         el = document;
       }
       return el.querySelectorAll(selector);
     },
-    getElementValue: function (el) {
+    getElementValue: function getElementValue (el) {
       return el.value;
     },
-    setElementValue: function (el, value) {
+    setElementValue: function setElementValue (el, value) {
       el.value = value;
     },
-    clearElementValue: function (el) {
+    clearElementValue: function clearElementValue (el) {
       el.value = '';
     },
-    getDataAttr: function (el, attr) {
+    getDataAttr: function getDataAttr (el, attr) {
       return el.dataset[attr];
     },
-    setDataAttr: function (el, attr, value) {
+    setDataAttr: function setDataAttr (el, attr, value) {
       el.dataset[attr] = value;
     },
-    updateText: function (el, text) {
+    updateText: function updateText (el, text) {
       el.textContent = text;
     },
-    forEach: function (elements, cb) {
+    forEach: function forEach (elements, cb) {
       Array.prototype.forEach.call(elements, cb);
     },
-    addChild: function (el, child) {
+    addChild: function addChild (el, child) {
       el.appendChild(child);
     }
   };
 
   var newUserTypeSelectionView = {
-    element: document.querySelector('.new-user-selection'),
-    updateSelection: function (type) {
-      view.forEach(view.getElements(this.element, 'li'), function reset (el) {
+    element: view.getElement('.new-user-selection'),
+    userTypeListElements: view.getElements(document, '.new-user-selection li'),
+    CLASSNAMES: {
+      SELECTED: 'selected'
+    },
+    forEachListElements: function forEachListElements (cb) {
+      view.forEach(this.userTypeListElements, cb);
+    },
+    updateSelection: function updateSelection (type) {
+      var that = this;
+
+      that.forEachListElements(function toggleSelectedClassName (el) {
         if (view.getDataAttr(el, 'type') !== type) {
-          view.removeClass(el, 'selected');
+          view.removeClass(el, that.CLASSNAMES.SELECTED);
         } else {
-          view.addClass(el, 'selected');
+          view.addClass(el, that.CLASSNAMES.SELECTED);
         }
       });
     },
-    clearSelection: function () {
-      view.forEach(view.getElements(this.element, 'li'), function reset (el) {
-        view.removeClass(el, 'selected');
+    clearSelection: function clearSelection () {
+      var that = this;
+
+      that.forEachListElements(function resetSelectedClassName (el) {
+        view.removeClass(el, that.CLASSNAMES.SELECTED);
       });
     }
   };
 
-  var existingUserSelectionView = {
-    element: document.querySelector('.existing-user-list'),
-    updateSelection: function (userID) {
-      view.forEach(view.getElements(this.element, 'li'), function reset (el) {
+  var existingUserListView = {
+    element: view.getElement('.existing-user-list'),
+    CLASSNAMES: {
+      SELECTED: 'selected'
+    },
+    forEachExistingUsers: function forEachExistingUsers (cb) {
+      view.forEach(view.getElements(this.element, 'li'), cb.bind(this));
+    },
+    updateSelection: function updateSelection (userID) {
+      this.forEachExistingUsers(function toggleSelectedClassName (el) {
         if (view.getDataAttr(el, 'id') !== userID) {
-          view.removeClass(el, 'selected');
+          view.removeClass(el, this.CLASSNAMES.SELECTED);
         } else {
-          view.addClass(el, 'selected');
+          view.addClass(el, this.CLASSNAMES.SELECTED);
         }
       });
     },
-    clearSelection: function () {
-      view.forEach(view.getElements(this.element, 'li'), function reset (el) {
-        view.removeClass(el, 'selected');
+    clearSelection: function clearSelection () {
+      this.forEachExistingUsers(function reset (el) {
+        view.removeClass(el, this.CLASSNAMES.SELECTED);
       });
     },
-    updateDisplayName: function (id, username) {
+    updateDisplayName: function updateDisplayName (id, username) {
       view.updateText(view.getElement(this.element, '[data-id="' + id + '"]'), username);
     },
-    addNewUser: function (id, username) {
+    addNewUser: function addNewUser (id, username) {
       var listEl = view.createElement('li');
       view.addClass(listEl, 'list-item');
       view.updateText(listEl, username);
@@ -129,8 +141,14 @@
   };
 
   var createUserFormView = {
-    element: document.querySelector('.user-form.create'),
-    inspect: function () {
+    element: view.getElement('.user-form.create'),
+    inputFieldElements: view.getElements(document, '.user-form.create input'),
+    userTypeSelectElement: view.getElement(document, '.user-form.create select'),
+    successMessageElement: view.getElement(document, '.user-form.create .success-message'),
+    submitButtonElement: view.getElement(document, '.user-form.create button.submit'),
+    cancelButtonElement: view.getElement(document, '.user-form.create button.cancel'),
+    closeButtonElement: view.getElement(document, '.user-form.create button.close'),
+    inspect: function inspect () {
       var result = {
         error: null,
         fieldValues: {}
@@ -146,99 +164,93 @@
 
       return result;
     },
-    isHidden: function () {
+    isHidden: function isHidden () {
       return !view.isBlockElement(this.element);
     },
-    getUserType: function () {
+    getUserType: function getUserType () {
       return Number(view.getElementValue(view.getElement(this.element, 'select')));
     },
-    showSuccessMode: function () {
+    showSuccessMode: function showSuccessMode () {
       view.removeClass(this.element, 'error');
-      view.showBlockElement(view.getElement(this.element, '.success-message'));
-      view.hideElement(view.getElement(this.element, 'button.submit'));
-      view.hideElement(view.getElement(this.element, 'button.cancel'));
-      view.showInlineBlockElement(view.getElement(this.element, 'button.close'));
+      view.showBlockElement(this.successMessageElement);
+      view.hideElement(this.submitButtonElement);
+      view.hideElement(this.cancelButtonElement);
+      view.showInlineBlockElement(this.closeButtonElement);
     },
-    reset: function () {
-      var successMessageEl = view.getElement(this.element, '.success-message');
-      var submitButtonEl = view.getElement(this.element, 'button.submit');
-      var cancelButtonEl = view.getElement(this.element, 'button.cancel');
-      var closeButtonEl = view.getElement(this.element, 'button.close');
-      var inputFieldEls = view.getElements(this.element, 'input');
-
+    reset: function reset () {
       view.removeClass(this.element, 'error');
-      view.hideElement(successMessageEl);
-      view.showInlineBlockElement(submitButtonEl);
-      view.showInlineBlockElement(cancelButtonEl);
-      view.hideElement(closeButtonEl);
-      view.forEach(inputFieldEls, view.clearElementValue);
+      view.hideElement(this.successMessageElement);
+      view.showInlineBlockElement(this.submitButtonElement);
+      view.showInlineBlockElement(this.cancelButtonElement);
+      view.hideElement(this.closeButtonElement);
+      view.forEach(this.inputFieldElements, view.clearElementValue);
     },
-    show: function () {
+    show: function show () {
       view.showBlockElement(this.element);
     },
-    hide: function () {
+    hide: function hide () {
       view.hideElement(this.element);
     },
-    triggerError: function () {
+    triggerError: function triggerError () {
       view.addClass(this.element, 'error');
     },
-    updateUserTypeSelection: function (type) {
-      view.setElementValue(view.getElement(this.element, 'select'), type);
+    updateUserTypeSelection: function updateUserTypeSelection (type) {
+      view.setElementValue(this.userTypeSelectElement, type);
     }
   };
 
   var updateUserFormView = {
-    element: document.querySelector('.user-form.update'),
-    isHidden: function () {
+    element: view.getElement('.user-form.update'),
+    inputFieldElements: view.getElements(document, '.user-form.update input'),
+    userTypeSelectElement: view.getElement(document, '.user-form.update select'),
+    successMessageElement: view.getElement(document, '.user-form.update .success-message'),
+    submitButtonElement: view.getElement(document, '.user-form.update button.submit'),
+    cancelButtonElement: view.getElement(document, '.user-form.update button.cancel'),
+    closeButtonElement: view.getElement(document, '.user-form.update button.close'),
+    isHidden: function isHidden () {
       return !view.isBlockElement(this.element);
     },
-    hide: function () {
+    hide: function hide () {
       view.hideElement(this.element);
     },
-    getUserType: function () {
+    getUserType: function getUserType () {
       return Number(view.getElementValue(view.getElement(this.element, 'select')));
     },
-    showSuccessMode: function () {
+    showSuccessMode: function showSuccessMode () {
       view.removeClass(this.element, 'error');
-      view.showBlockElement(view.getElement(this.element, '.success-message'));
-      view.hideElement(view.getElement(this.element, 'button.submit'));
-      view.hideElement(view.getElement(this.element, 'button.cancel'));
-      view.showInlineBlockElement(view.getElement(this.element, 'button.close'));
+      view.showBlockElement(this.successMessageElement);
+      view.hideElement(this.submitButtonElement);
+      view.hideElement(this.cancelButtonElement);
+      view.showInlineBlockElement(this.closeButtonElement);
     },
-    show: function () {
+    show: function show () {
       view.showBlockElement(this.element);
     },
-    reset: function () {
-      var successMessageEl = view.getElement(this.element, '.success-message');
-      var submitButtonEl = view.getElement(this.element, 'button.submit');
-      var cancelButtonEl = view.getElement(this.element, 'button.cancel');
-      var closeButtonEl = view.getElement(this.element, 'button.close');
-      var inputFieldEls = view.getElements(this.element, 'input');
-
+    reset: function reset () {
       view.removeClass(this.element, 'error');
-      view.hideElement(successMessageEl);
-      view.showInlineBlockElement(submitButtonEl);
-      view.showInlineBlockElement(cancelButtonEl);
-      view.hideElement(closeButtonEl);
-      view.forEach(inputFieldEls, view.clearElementValue);
+      view.hideElement(this.successMessageElement);
+      view.showInlineBlockElement(this.submitButtonElement);
+      view.showInlineBlockElement(this.cancelButtonElement);
+      view.hideElement(this.closeButtonElement);
+      view.forEach(this.inputFieldElements, view.clearElementValue);
     },
-    setFormValues: function (userData) {
-      view.forEach(view.getElements(updateUserFormEl, 'input'), function (el) {
+    setFormValues: function setFormValues (userData) {
+      view.forEach(this.inputFieldElements, function resetInputValue (el) {
         el.value = userData[el.id];
       });
 
-      view.setElementValue(view.getElement(updateUserFormEl, 'select'), userData.type);
+      view.setElementValue(this.userTypeSelectElement, userData.type);
     },
-    triggerError: function () {
+    triggerError: function triggerError () {
       view.addClass(this.element, 'error');
     },
-    inspect: function () {
+    inspect: function inspect () {
       var result = {
         error: null,
         fieldValues: {}
       };
 
-      view.forEach(view.getElements(this.element, 'input'), function (el) {
+      view.forEach(this.inputFieldElements, function setInputValue (el) {
         if (!el.value) {
           result.error = el.id;
         } else {
@@ -250,7 +262,7 @@
     }
   };
 
-  newUserSelectionEl.addEventListener('click', function createNewUser (e) {
+  newUserTypeSelectionView.element.addEventListener('click', function createNewUser (e) {
     if (!view.hasClass(e.target, 'selection')) {
       return;
     }
@@ -267,14 +279,14 @@
     createUserFormView.updateUserTypeSelection(userType);
   });
 
-  existingUserListEl.addEventListener('click', function modifyUser (e) {
+  existingUserListView.element.addEventListener('click', function modifyUser (e) {
     if (!view.hasClass(e.target, 'list-item')) {
       return;
     }
 
     var targetUserID = view.getDataAttr(e.target, 'id');
 
-    existingUserSelectionView.updateSelection(targetUserID);
+    existingUserListView.updateSelection(targetUserID);
 
     if (updateUserFormView.isHidden()) {
       updateUserFormView.show();
@@ -287,7 +299,7 @@
     updateUserFormView.setFormValues(targetUser);
   });
 
-  newUserFormEl.addEventListener('click', function onButtonClick (e) {
+  createUserFormView.element.addEventListener('click', function onButtonClick (e) {
     if (e.target.tagName !== 'BUTTON') {
       return;
     }
@@ -320,11 +332,11 @@
       userId++;
     }
 
-    existingUserSelectionView.addNewUser(user.id, user.username);
+    existingUserListView.addNewUser(user.id, user.username);
     createUserFormView.showSuccessMode();
   });
 
-  updateUserFormEl.addEventListener('click', function onButtonClick (e) {
+  updateUserFormView.element.addEventListener('click', function onButtonClick (e) {
     if (e.target.tagName !== 'BUTTON') {
       return;
     }
@@ -332,7 +344,7 @@
     if (view.hasClass(e.target, 'close') || view.hasClass(e.target, 'cancel')) {
       updateUserFormView.hide();
       updateUserFormView.reset();
-      existingUserSelectionView.clearSelection();
+      existingUserListView.clearSelection();
       return;
     }
 
@@ -351,11 +363,11 @@
 
     targetUser.type = updateUserFormView.getUserType();
 
-    existingUserSelectionView.updateDisplayName(targetUser.id, targetUser.username);
+    existingUserListView.updateDisplayName(targetUser.id, targetUser.username);
     updateUserFormView.showSuccessMode();
   });
 
-  view.getElement(newUserFormEl, 'select').addEventListener('change', function (e) {
+  createUserFormView.userTypeSelectElement.addEventListener('change', function updateUserTypeSelection (e) {
     newUserTypeSelectionView.updateSelection(e.currentTarget.value);
   });
 })();
