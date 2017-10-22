@@ -2,25 +2,17 @@
 
 ### 브랜치 가이드
 
-- `v0`: 순 바닐라
-- `v1`: OOP 1단계
-- `v2`: OOP 2단계
-- `v3`: OOP 3단계
-- `v4`: 파일 분류
-- `v5`: MVC
-- `v6`: MVC with IIFE pattern
-- `v7`: Debugging
+- `v0-vanilla`: 순 바닐라
+- `v1-oop1`: OOP 1단계
+- `v2-oop2`: OOP 2단계
+- `v3-mvc`: MVC 패턴
+- `v4-debugging-demo`: Debuggin Demo
 
 ---
 
 ### 필수 사항
 
-바닐라코딩 사용자 관리 시스템에 다음과 같은 버그가 보고되었습니다. 우리가 해야할 일이 생겼습니다!
-
-1. 기획자 왈, "CSS가 하나도 안먹었고, 아무것도 안되요!! 뭔가 다 망가졌어요!!"
-2. 사용자 왈, 사용자 생성하기 Form이 안떠요!! 어떻게 된거죠!!
-3. 생성할 사용자 선택을 바꾸면 전부 다 선택되요!! 뭐에요 이게!!
-
+**데모를 위한 브랜치입니다.**
 
 ---
 
@@ -64,7 +56,7 @@ MAC/Window: control + C
 git status
 git add FILE_NAME
 git commit -m "COMMIT_MSG"
-git push origin master
+git push origin v4-debugging-demo
 ```
 
 ---
