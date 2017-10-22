@@ -2,27 +2,22 @@
 
 ### 브랜치 가이드
 
-- `v0`: 순 바닐라
-- `v1`: OOP 1단계
-- `v2`: OOP 2단계
-- `v3`: OOP 3단계
-- `v4`: 파일 분류
-- `v5`: MVC
-- `v6`: MVC with IIFE pattern
-- `v7`: Debugging
-- `v8`: Debugging Practice
-- `v9`: Routing
+- `v0-vanilla`: 순 바닐라
+- `v1-oop1`: OOP 1단계
+- `v2-oop2`: OOP 2단계
+- `v3-mvc`: MVC 패턴
+- `v4-debugging-demo`: Debuggin Demo
+- `v5-debugging`: Debugging Practice
+- `v6-routing`: Routing
 
 ---
 
 ### 필수 사항
 
-여러분은 바닐라코딩 사용자 관리 시스템에 아래 설명과 같은 기능을 추가하셔야 합니다.
+1. 사용자 생성(수정 제외) Form이 열린 상태를 URL로 구분할 수 있게 해주세요.
 
-1. Form의 오픈 상태에 따른 URL을 사용자에게 제공하기
-
-    - 사용자를 생성/수정하려고 Form을 열었을 경우 URL이 바뀌고, 바뀐 URL로 다시 들어올 경우 해당 Form은 열린 상태여야 합니다.
-    - Form에 입력한 값들은 저장하지 않아도 됩니다.
+    - 예를 들어, 사용자를 만들려고 사용자 생성 폼을 열었던 상태로 URL을 이용하여 다시 방문할 수 있어야 합니다.
+    - 입력창에 넣었던 값은 무시해도 됩니다.
 
 ---
 
@@ -66,7 +61,7 @@ MAC/Window: control + C
 git status
 git add FILE_NAME
 git commit -m "COMMIT_MSG"
-git push origin master
+git push origin v6-routing
 ```
 
 ---
