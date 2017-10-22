@@ -2,18 +2,15 @@
 
 ### 브랜치 가이드
 
-- `v0`: 순 바닐라
-- `v1`: OOP 1단계
-- `v2`: OOP 2단계
-- `v3`: OOP 3단계
-- `v4`: 파일 분류
-- `v5`: MVC
-- `v6`: MVC with IIFE pattern
-- `v7`: Debugging
-- `v8`: Debugging Practice
-- `v9`: Routing
-- `v10`: Publish & Subscribe
-- `v11`: Async programming
+- `v0-vanilla`: 순 바닐라
+- `v1-oop1`: OOP 1단계
+- `v2-oop2`: OOP 2단계
+- `v3-mvc`: MVC 패턴
+- `v4-debugging-demo`: Debuggin Demo
+- `v5-debugging`: Debugging Practice
+- `v6-routing`: Routing
+- `v7-pubsub`: Publish and Subscribe
+- `v8-async1`: Async programming
 
 ---
 
@@ -130,7 +127,7 @@ MAC/Window: control + C
 git status
 git add FILE_NAME
 git commit -m "COMMIT_MSG"
-git push origin master
+git push origin v8-async1
 ```
 
 ---
