@@ -2,24 +2,18 @@
 
 ### 브랜치 가이드
 
-- `v0`: 순 바닐라
-- `v1`: OOP 1단계
-- `v2`: OOP 2단계
-- `v3`: OOP 3단계
-- `v4`: 파일 분류
-- `v5`: MVC
-- `v6`: MVC with IIFE pattern
-- `v7`: Debugging
-- `v8`: Debugging Practice
+- `v0-vanilla`: 순 바닐라
+- `v1-oop1`: OOP 1단계
+- `v2-oop2`: OOP 2단계
+- `v3-mvc`: MVC 패턴
+- `v4-debugging-demo`: Debuggin Demo
+- `v5-debugging`: Debugging Practice
 
 ---
 
 ### 필수 사항
 
-바닐라코딩 사용자 관리 시스템에 다음과 같은 버그가 보고되었습니다. 우리가 해야할 일이 생겼습니다!
-
-**여러가지 숨은 버그들이 있습니다. 고쳐주세요!!**
-
+**Debugging 연습을 위한 브랜치입니다. 시간나시면 고쳐보세요!**
 
 ---
 
@@ -63,7 +57,7 @@ MAC/Window: control + C
 git status
 git add FILE_NAME
 git commit -m "COMMIT_MSG"
-git push origin master
+git push origin v5-debugging
 ```
 
 ---
