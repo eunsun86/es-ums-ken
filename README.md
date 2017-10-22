@@ -20,7 +20,7 @@
 
     - 삭제가 가능하다는 안내문 추가
     - 사용자 수정 Form에 삭제 버튼 추가
-    - 삭제 실행시, 선택된 사용자를 `userCollection`에서 제거 ([참고](https://github.com/vanilla-coding/ums/blob/v0/src/index.js#L11))
+    - 삭제 실행시, 선택된 사용자를 `userCollection`에서 제거
     - 삭제 실행시, UI의 사용자 리스트에서 선택된 사용자를 제거 (선택된 사용자가 없는 초기 모드로 변환)
     - 삭제 실행시, 사용자 수정 Form 닫기
 
@@ -73,7 +73,7 @@ MAC/Window: control + C
 git status
 git add FILE_NAME
 git commit -m "COMMIT_MSG"
-git push origin master
+git push origin v2-oop2
 ```
 
 ---
