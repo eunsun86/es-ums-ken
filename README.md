@@ -13,15 +13,15 @@
 
 ---
 
-### 필수 사항
+### TODO
 
 여러분은 바닐라코딩 사용자 관리 시스템에 아래의 내용처럼 현재 코드를 Refactoring하셔야 합니다.
 
-1. Pub-Sub을 이용하기
+1. [필수] Pub-Sub을 이용하기
 
     - 사용자를 새로 만들 경우, 현재 사용자 리스트에 추가됩니다. 기존의 코드를 읽어보시고 Pub-Sub 패턴을 이용하여 UI에 사용자가 추가되도록 Refactoring 해보세요.
 
-2. 불필요한 Subscription 처리하기
+2. [보너스] 불필요한 Subscription 처리하기
 
     - 현재 적용된 Pub-Sub은 모두 create 페이지에서만 사용됩니다. list페이지로 이동시, subscription을 폐기하고 다시 create 페이지로 돌아올시 subscription을 다시 등록하도록 refactoring을 해주세요. (messenger에 listener를 폐기할 수 있는 기능을 먼저 추가하셔야 합니다.)
 
