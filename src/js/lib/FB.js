@@ -7,6 +7,29 @@
 }(document, 'script', 'facebook-jssdk'));
 
 window.onlogin = function () {
+
+
+  // ======================== Without Promise ============================ //
+
+  FB.getLoginStatus(function (response) {
+    if (response.status === 'connected') {
+      messenger.publish('LOGIN');
+
+      FB.api('/me', function (response) {
+        messenger.publish('RECEIVE_USERNAME', response);
+
+        FB.api('/me/picture?type=small', function (response) {
+          messenger.publish('RECEIVE_PROFILE_IMAGE', response.data);
+        });
+      });
+    }
+  });
+
+
+
+
+  // ======================== With Promise ============================ //
+
   var loginStatusPromise = new Promise(function (resolve, reject) {
     FB.getLoginStatus(resolve);
   });
@@ -44,9 +67,16 @@ window.onlogin = function () {
     profilePicturePromise.then(function (data) {
       messenger.publish('RECEIVE_PROFILE_IMAGE', data.data);
     });
+
+  // Promise Error Handling
   }).catch(function (error) {
     console.error(error);
   });
+
+
+
+
+
 
   FB.Event.subscribe('auth.logout', function (response) {
     messenger.publish('LOGOUT');
