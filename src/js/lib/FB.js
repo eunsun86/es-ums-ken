@@ -6,26 +6,49 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
-window.IS_LOGGEDIN = false;
-
 window.onlogin = function () {
-  FB.getLoginStatus(function (response) {
-    if (window.IS_LOGGEDIN) {
+  var loginStatusPromise = new Promise(function (resolve, reject) {
+    FB.getLoginStatus(resolve);
+  });
+
+  loginStatusPromise.then(function (response) {
+    if (response.status === 'connected') {
+      messenger.publish('LOGIN');
+      return true;
+    } else {
+      return false;
+    }
+  }).then(function (result) {
+    if (!result) {
+      return result;
+    }
+
+    var usernamePromise = new Promise(function (resolve, reject) {
+      FB.api('/me', resolve);
+    });
+
+    usernamePromise.then(function (data) {
+      messenger.publish('RECEIVE_USERNAME', data);
+    });
+
+    return usernamePromise;
+  }).then(function (result) {
+    if (!result) {
       return;
     }
 
-    if (response.status === 'connected') {
-      window.IS_LOGGEDIN = true;
-      messenger.publish('LOGIN');
-    }
+    var profilePicturePromise = new Promise(function (resolve, reject) {
+      FB.api('/me/picture?type=small', resolve);
+    });
+
+    profilePicturePromise.then(function (data) {
+      messenger.publish('RECEIVE_PROFILE_IMAGE', data.data);
+    });
+  }).catch(function (error) {
+    console.error(error);
   });
 
   FB.Event.subscribe('auth.logout', function (response) {
-    if (!window.IS_LOGGEDIN) {
-      return;
-    }
-
-    window.IS_LOGGEDIN = false;
     messenger.publish('LOGOUT');
   });
 };

@@ -1,4 +1,4 @@
-function Promise (callback) {
+function Promise () {
   this.successCallbacks = [];
   this.errorCallbacks = [];
 }
@@ -19,8 +19,10 @@ function Defer () {
   that.promise = new Promise();
 
   that.resolve = function (data) {
+    var result = data;
+
     that.promise.successCallbacks.forEach(function (cb) {
-      cb(data);
+      result = cb(result);
     });
   };
 

@@ -1,5 +1,3 @@
-import Q from 'q';
-
 (function() {
   var USER_TYPES = {
     0: '일반인',
@@ -12,8 +10,11 @@ import Q from 'q';
   var USER_TYPE_CHANGE = 'USER_TYPE_CHANGE';
   var LOGIN = 'LOGIN';
   var LOGOUT = 'LOGOUT';
+  var RECEIVE_USERNAME = 'RECEIVE_USERNAME';
+  var RECEIVE_PROFILE_IMAGE = 'RECEIVE_PROFILE_IMAGE';
 
   var appController = {
+    isLoggedIn: false,
     onNewUserSelection: function (data) {
       if (this.createUserFormView.isHidden()) {
         this.createUserFormView.show();
@@ -99,6 +100,7 @@ import Q from 'q';
       this.navigationMenuView.select('list');
     },
     onLoginRoute: function () {
+      this.hideCurrentUser();
       this.userListPageView.hide();
       this.createPageView.hide();
       this.navigationMenuView.hide();
@@ -116,20 +118,6 @@ import Q from 'q';
     hideCurrentUser: function () {
       // TODO: Separate out as a View component
       document.querySelector('.current-user-info').style.display = 'none';
-    },
-    getUsername: function () {
-      return promisify(function (resolve, reject) {
-        FB.api('/me', function (res) {
-          resolve(res.name);
-        });
-      });
-    },
-    getUserProfileImgUrl: function () {
-      return promisify(function (resolve, reject) {
-        FB.api('/me/picture?type=small', function (res) {
-          resolve(res.data.url);
-        });
-      });
     },
     init: function () {
       var that = this;
@@ -162,30 +150,38 @@ import Q from 'q';
       this.router.on('create', this.onCreateRoute.bind(this));
       this.router.on('list', this.onListRoute.bind(this));
 
-      if (window.location.hash === '#/list' && window.IS_LOGGEDIN) {
+      if (window.location.hash === '#/list' && appController.isLoggedIn) {
         this.router.set('list');
-      } else if (window.location.hash === '#/create' && window.IS_LOGGEDIN) {
+      } else if (window.location.hash === '#/create' && appController.isLoggedIn) {
         this.router.set('create');
       } else {
         this.router.set('login');
       }
 
       messenger.subscribe(LOGIN, function () {
-        window.IS_LOGGEDIN = true;
-        that.router.set('create');
+        if (appController.isLoggedIn) {
+          return;
+        }
 
-        Q.all([
-          that.getUsername(),
-          that.getUserProfileImgUrl()
-        ]).then(function (data) {
-          that.showCurrentUser(data[0], data[1]);
-        });
+        appController.isLoggedIn = true;
+        that.router.set('create');
       });
 
       messenger.subscribe(LOGOUT, function () {
-        window.IS_LOGGEDIN = null;
-        that.hideCurrentUser();
+        if (!appController.isLoggedIn) {
+          return;
+        }
+
+        appController.isLoggedIn = false;
         that.router.set('login');
+      });
+
+      messenger.subscribe(RECEIVE_USERNAME, function (username) {
+        console.log(username);
+      });
+
+      messenger.subscribe(RECEIVE_PROFILE_IMAGE, function (imageUrl) {
+        console.log(imageUrl);
       });
 
       messenger.subscribe(USER_TYPE_CHANGE, this.updateUserList.bind(this));
