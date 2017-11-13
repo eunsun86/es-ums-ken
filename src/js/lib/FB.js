@@ -30,48 +30,7 @@ window.onlogin = function () {
 
   // ======================== With Promise ============================ //
 
-  var loginStatusPromise = new Promise(function (resolve, reject) {
-    FB.getLoginStatus(resolve);
-  });
 
-  loginStatusPromise.then(function (response) {
-    if (response.status === 'connected') {
-      messenger.publish('LOGIN');
-      return true;
-    } else {
-      return false;
-    }
-  }).then(function (result) {
-    if (!result) {
-      return result;
-    }
-
-    var usernamePromise = new Promise(function (resolve, reject) {
-      FB.api('/me', resolve);
-    });
-
-    usernamePromise.then(function (data) {
-      messenger.publish('RECEIVE_USERNAME', data);
-    });
-
-    return usernamePromise;
-  }).then(function (result) {
-    if (!result) {
-      return;
-    }
-
-    var profilePicturePromise = new Promise(function (resolve, reject) {
-      FB.api('/me/picture?type=small', resolve);
-    });
-
-    profilePicturePromise.then(function (data) {
-      messenger.publish('RECEIVE_PROFILE_IMAGE', data.data);
-    });
-
-  // Promise Error Handling
-  }).catch(function (error) {
-    console.error(error);
-  });
 
 
 
