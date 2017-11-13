@@ -10,8 +10,7 @@
   var USER_TYPE_CHANGE = 'USER_TYPE_CHANGE';
   var LOGIN = 'LOGIN';
   var LOGOUT = 'LOGOUT';
-  var RECEIVE_USERNAME = 'RECEIVE_USERNAME';
-  var RECEIVE_PROFILE_IMAGE = 'RECEIVE_PROFILE_IMAGE';
+  var RECEIVE_USER_DATA = 'RECEIVE_USER_DATA';
 
   var appController = {
     isLoggedIn: false,
@@ -176,12 +175,8 @@
         that.router.set('login');
       });
 
-      messenger.subscribe(RECEIVE_USERNAME, function (username) {
-        console.log(username);
-      });
-
-      messenger.subscribe(RECEIVE_PROFILE_IMAGE, function (imageUrl) {
-        console.log(imageUrl);
+      messenger.subscribe(RECEIVE_USER_DATA, function (data) {
+        console.log(data);
       });
 
       messenger.subscribe(USER_TYPE_CHANGE, this.updateUserList.bind(this));
